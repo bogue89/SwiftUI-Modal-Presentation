@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ModalResize: ViewModifier {
+    @Environment(\.modalPresentationCornerRadius) private var modalCornerRadius
     /// Drag state
     @GestureState private var isDragging = false
     @State private var showDragIndicator = true
@@ -45,10 +46,16 @@ struct ModalResize: ViewModifier {
                                     .layoutPriority(1)
                                     .onGeometryChange {
                                         minHeight = $0.size.height * 2
-                                        print("min", minHeight)
                                     }
                             }
                         }
+                        .clipShape(
+                            UnevenRoundedRectangle(
+                                topLeadingRadius: modalCornerRadius,
+                                topTrailingRadius: modalCornerRadius
+                            )
+                        )
+                        .ignoresSafeArea(edges: .bottom)
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: max(currentHeight, minHeight))
@@ -96,8 +103,9 @@ struct ModalResize: ViewModifier {
                 dragVerticalInertia = 0
             }
             .onEnded { value in
-                dragVerticalInertia = value.predictedEndLocation.y / 1.5
-
+                // TODO: Normalize velocity to predicted iternia landing
+                // dragVerticalInertia = value.predictedEndLocation.y / 1.5
+                dragVerticalInertia = 0
             }
     }
 

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ModalPresentation<PresentedContent: View>: ViewModifier {
-    @Environment(\.modalTransition) private var modalTransition
+    @Environment(\.modalPresentationTransition) private var modalTransition
 
     @State private var isFullScreenCoverPresented = false
     @State private var isFullScreenCoverVisible = false
@@ -63,7 +63,6 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
                                 .onTapGesture {
                                     isPresented = false
                                 }
-
                         }
                     }
                     .overlay(alignment: .center) {
@@ -73,13 +72,6 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
                                 presentedContent()
                             }
                             .transition(modalTransition)
-//                            .padding(20)
-//                            .background {
-//                                RoundedRectangle(cornerRadius: 10, style: .continuous)
-//                                    .fill(.thinMaterial)
-//                                    .shadow(radius: 30)
-//                                    .ignoresSafeArea()
-//                            }
                             .background {
                                 Color.clear
                                     .contentShape(Rectangle())
@@ -92,20 +84,19 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
     }
 }
 
-extension EnvironmentValues {
-    private struct ModalTransitionKey: EnvironmentKey {
-        static var defaultValue: AnyTransition = .move(edge: .bottom)
-    }
-    var modalTransition: AnyTransition {
-        get { self[ModalTransitionKey.self] }
-        set { self[ModalTransitionKey.self] = newValue }
-    }
-}
-
 extension View {
     func presentation<Content: View>(_ isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) -> some View {
-        self.modifier(
+        modifier(
             ModalPresentation(isPresented: isPresented, onDismiss: onDismiss, content: content)
         )
     }
+}
+
+#Preview {
+    Text("")
+        .presentation(.constant(true)) {
+            Text("content")
+                .padding(20)
+                .background(.thinMaterial)
+        }
 }

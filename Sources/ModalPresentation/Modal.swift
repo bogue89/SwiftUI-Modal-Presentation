@@ -1,26 +1,29 @@
 import SwiftUI
 
 struct Modal<PresentedContent: View>: ViewModifier {
+    @Environment(\.modalPresentationBackground) private var modalBackground
+    @Environment(\.modalPresentationCornerRadius) private var modalCornerRadius
+
     @State private var presentedModalHeight: CGFloat = .zero
 
     @Binding private var isPresented: Bool
+    @Binding private var modalDetent: ModalDetent
+    private var modalDetents: [ModalDetent]?
     private var onDismiss: (() -> Void)?
     private var presentedContent: () -> PresentedContent
-    @State var modalDetent: ModalDetent = .large
-    private var modalDetents: [ModalDetent]?
 
     init(
         isPresented: Binding<Bool>,
-        onDismiss: (() -> Void)? = nil,
-        content: @escaping () -> PresentedContent,
         modalDetent: Binding<ModalDetent>,
-        detents: [ModalDetent]? = nil
+        detents: [ModalDetent]? = nil,
+        onDismiss: (() -> Void)? = nil,
+        content: @escaping () -> PresentedContent
     ) {
         self._isPresented = isPresented
+        self._modalDetent = modalDetent
+        self.modalDetents = detents
         self.onDismiss = onDismiss
         self.presentedContent = content
-//        self._modalDetent = modalDetent
-        self.modalDetents = detents
     }
 
     func body(content: Content) -> some View {
@@ -30,19 +33,19 @@ struct Modal<PresentedContent: View>: ViewModifier {
                     presentedContent()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background {
-                    UnevenRoundedRectangle(
-                        topLeadingRadius: 30,
-                        topTrailingRadius: 30
-                    )
-                        .fill(.thinMaterial)
-                        .ignoresSafeArea()
-                        .onGeometryChange {
-                            presentedModalHeight = $0.size.height
-                        }
-                }
-                // TODO: detents logic for .modal modifier
-                .resizable($modalDetent, detents: [])
+                .background(modalBackground)
+//                .background {
+//                    UnevenRoundedRectangle(
+//                        topLeadingRadius: 0,
+//                        topTrailingRadius: 0
+//                    )
+//                        .fill(.gray)
+//                        .ignoresSafeArea()
+//                        .onGeometryChange {
+//                            presentedModalHeight = $0.size.height
+//                        }
+//                }
+                .resizable($modalDetent, detents: modalDetents)
                 .background {
                     Color.clear
                         .contentShape(Rectangle())
@@ -54,7 +57,7 @@ struct Modal<PresentedContent: View>: ViewModifier {
                 .onChange(of: modalDetent) { _, value in
                     if case .height(let height) = value,
                        presentedModalHeight > height {
-                        isPresented = false
+//                        isPresented = false
                     }
                 }
             }
@@ -62,7 +65,7 @@ struct Modal<PresentedContent: View>: ViewModifier {
 }
 
 extension View {
-    func modal<Content: View>(
+    public func modal<Content: View>(
         _ isPresented: Binding<Bool>,
         onDismiss: (() -> Void)? = nil,
         modalDetent: Binding<ModalDetent> = .constant(.large),
@@ -72,10 +75,10 @@ extension View {
         self.modifier(
             Modal(
                 isPresented: isPresented,
-                onDismiss: onDismiss,
-                content: content,
                 modalDetent: modalDetent,
-                detents: detents
+                detents: detents,
+                onDismiss: onDismiss,
+                content: content
             )
         )
     }
