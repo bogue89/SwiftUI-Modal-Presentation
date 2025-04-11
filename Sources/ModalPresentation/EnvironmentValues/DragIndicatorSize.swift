@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  ModalPresentation
-//
-//  Created by Jorge Benavides Ojinaga on 09/04/25.
-//
-
 import SwiftUI
 
 public enum DragIndicatorSize {
@@ -19,5 +12,11 @@ extension EnvironmentValues {
     public var dragIndicatorSize: DragIndicatorSize {
         get { self[DragIndicatorSizeKey.self] }
         set { self[DragIndicatorSizeKey.self] = newValue }
+    }
+}
+
+extension View {
+    public func modalPresentation(dragIndicatorSize: DragIndicatorSize) -> some View {
+        environment(\.dragIndicatorSize, dragIndicatorSize)
     }
 }

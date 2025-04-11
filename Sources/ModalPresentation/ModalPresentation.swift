@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct ModalPresentation<PresentedContent: View>: ViewModifier {
-    @Environment(\.modalPresentationTransition) private var modalTransition
+    @Environment(\.modalTransition) private var modalTransition
+    @Environment(\.modalBackdrop) private var modalBackdrop
 
     @State private var isFullScreenCoverPresented = false
     @State private var isFullScreenCoverVisible = false
@@ -55,14 +56,10 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
                     .background {
                         if isFullScreenCoverVisible {
                             // Backdrop
-                            Color
-                                .black
-                                .opacity(0.1)
+                            Color.clear
+                                .background(modalBackdrop)
                                 .ignoresSafeArea()
                                 .transition(.opacity)
-                                .onTapGesture {
-                                    isPresented = false
-                                }
                         }
                     }
                     .overlay(alignment: .center) {
@@ -72,11 +69,6 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
                                 presentedContent()
                             }
                             .transition(modalTransition)
-                            .background {
-                                Color.clear
-                                    .contentShape(Rectangle())
-                                    .ignoresSafeArea()
-                            }
                         }
                     }
                     .presentationBackground(.clear)

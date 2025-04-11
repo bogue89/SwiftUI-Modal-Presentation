@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct ModalResize: ViewModifier {
-    @Environment(\.modalPresentationCornerRadius) private var modalCornerRadius
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modalCornerRadius) private var modalCornerRadius
+    @Environment(\.modalInteractiveDismiss) private var modalInteractiveDismiss
     /// Drag state
     @GestureState private var isDragging = false
     @State private var showDragIndicator = true
@@ -49,12 +51,7 @@ struct ModalResize: ViewModifier {
                                     }
                             }
                         }
-                        .clipShape(
-                            UnevenRoundedRectangle(
-                                topLeadingRadius: modalCornerRadius,
-                                topTrailingRadius: modalCornerRadius
-                            )
-                        )
+                        .clipShape(clipShapeStyle)
                         .ignoresSafeArea(edges: .bottom)
                 }
                 .frame(maxWidth: .infinity)
@@ -117,8 +114,12 @@ struct ModalResize: ViewModifier {
     }
 
     private func didDragEnd(with predictedVerticalTranslation: CGFloat) {
+        let height = currentHeight + predictedVerticalTranslation
+        if modalInteractiveDismiss, height.isLessThanOrEqualTo(0) {
+            dismiss()
+        }
         let detent = closesDetent(
-            to: currentHeight + predictedVerticalTranslation,
+            to: height,
             in: maxHeight,
             using: modalDetents ?? [modalDetent]
         )
@@ -136,6 +137,25 @@ struct ModalResize: ViewModifier {
         detents.min {
             abs($0.resolve(for: maxHeight) - target) < abs($1.resolve(for: maxHeight) - target)
         } ?? .height(target)
+    }
+
+    private var clipShapeStyle: AnyShape {
+        if !isFullscreenDetent {
+            .init(UnevenRoundedRectangle(
+                topLeadingRadius: modalCornerRadius,
+                topTrailingRadius: modalCornerRadius
+            ))
+        } else {
+            .init(Rectangle().scale(2))
+        }
+    }
+
+    private var isFullscreenDetent: Bool {
+        if case .fullscreen = modalDetent {
+            true
+        } else {
+            false
+        }
     }
 }
 

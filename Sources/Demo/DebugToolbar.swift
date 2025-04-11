@@ -36,7 +36,8 @@ struct DebugToolbar: ViewModifier {
                         .pickerStyle(.segmented)
                     }
                 }
-                .padding(.horizontal, 15)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 8)
                 .background(.thinMaterial)
             }
     }

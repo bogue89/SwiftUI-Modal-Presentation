@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct Modal<PresentedContent: View>: ViewModifier {
-    @Environment(\.modalPresentationBackground) private var modalBackground
-    @Environment(\.modalPresentationCornerRadius) private var modalCornerRadius
+    @Environment(\.modalBackground) private var modalBackground
+    @Environment(\.modalCornerRadius) private var modalCornerRadius
+    @Environment(\.modalInteractiveDismiss) private var modalInteractiveDismiss
 
     @State private var presentedModalHeight: CGFloat = .zero
 
@@ -34,31 +35,15 @@ struct Modal<PresentedContent: View>: ViewModifier {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(modalBackground)
-//                .background {
-//                    UnevenRoundedRectangle(
-//                        topLeadingRadius: 0,
-//                        topTrailingRadius: 0
-//                    )
-//                        .fill(.gray)
-//                        .ignoresSafeArea()
-//                        .onGeometryChange {
-//                            presentedModalHeight = $0.size.height
-//                        }
-//                }
                 .resizable($modalDetent, detents: modalDetents)
                 .background {
                     Color.clear
                         .contentShape(Rectangle())
                         .ignoresSafeArea()
                         .onTapGesture {
+                            guard modalInteractiveDismiss else { return }
                             isPresented = false
                         }
-                }
-                .onChange(of: modalDetent) { _, value in
-                    if case .height(let height) = value,
-                       presentedModalHeight > height {
-//                        isPresented = false
-                    }
                 }
             }
     }
