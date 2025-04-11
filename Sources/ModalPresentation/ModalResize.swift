@@ -62,21 +62,20 @@ struct ModalResize: ViewModifier {
                     guard !value else { return }
                     didDragEnd(with: dragVerticalInertia)
                 }
-                .onChange(of: maxHeight) { _, value in
+                .onChange(of: maxHeight) { oldValue, newValue in
                     guard !isDragging else { return }
-                    resolveHeight()
+                    resolveHeight(animated: oldValue != 0)
                 }
-                .onChange(of: modalDetent, initial: true) { _, value in
+                .onChange(of: modalDetent, initial: false) { _, value in
                     resolveHeight()
                 }
             }
     }
 
-    private func resolveHeight() {
+    private func resolveHeight(animated: Bool = true) {
         guard maxHeight > 0 else { return }
         let height = modalDetent.resolve(for: maxHeight)
-
-        withAnimation {
+        Transaction.with(animation: animated ? .easeOut : nil) {
             showDragIndicator = true
             switch height {
             case ..<30:

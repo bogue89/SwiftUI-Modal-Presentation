@@ -25,7 +25,7 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
         content
             .onChange(of: isPresented, initial: true) {
                 if isPresented {
-                    withoutAnimation {
+                    Transaction.with(animation: nil) {
                         isFullScreenCoverPresented = true
                     } completion: {
                         withAnimation(.linear(duration: 0.25)) {
@@ -36,7 +36,7 @@ struct ModalPresentation<PresentedContent: View>: ViewModifier {
                     withAnimation(.linear(duration: 0.25)) {
                         isFullScreenCoverVisible = false
                     } completion: {
-                        withoutAnimation {
+                        Transaction.with(animation: nil) {
                             isFullScreenCoverPresented = false
                         }
                     }
