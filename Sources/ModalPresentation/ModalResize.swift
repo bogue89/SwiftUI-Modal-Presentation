@@ -35,6 +35,7 @@ struct ModalResize: ViewModifier {
                 maxHeight = $0.size.height
             }
             .overlay(alignment: .bottom) {
+                // TODO: With debug toolbar and small detent top area is not draggable
                 VStack(spacing: 0) {
                     content
                         .safeAreaInset(edge: .top, spacing: 0) {
@@ -97,10 +98,10 @@ struct ModalResize: ViewModifier {
             .onChanged { value in
                 didDragChange(with: value.translation.height)
                 dragVerticalInertia = 0
+//                print(value.translation.height, value.predictedEndTranslation.height, value.velocity.height)
             }
             .onEnded { value in
                 // TODO: Normalize velocity to predicted iternia landing
-                // dragVerticalInertia = value.predictedEndLocation.y / 1.5
                 dragVerticalInertia = 0
             }
     }

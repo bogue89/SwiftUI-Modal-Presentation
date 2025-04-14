@@ -4,12 +4,17 @@ import ModalPresentation
 struct DebugToolbar: ViewModifier {
 
     @Environment(\.dismiss) var dismiss
+    let enable: Bool
     @Binding var selectedDetent: ModalDetent
     let allowDetents: [ModalDetent]?
 
     func body(content: Content) -> some View {
-        content
-            .safeAreaInset(edge: .top) {
+        VStack {
+            content
+        }
+        .frame(maxHeight: .infinity)
+        .safeAreaInset(edge: .top) {
+            if enable {
                 VStack(spacing: 10) {
                     HStack {
                         Text("\(selectedDetent)")
@@ -39,14 +44,17 @@ struct DebugToolbar: ViewModifier {
                 .padding(.horizontal, 12)
                 .padding(.bottom, 8)
                 .background(.thinMaterial)
+            } else {
+                EmptyView()
             }
+        }
     }
 }
 
 extension View {
-    func debugToolbar(selectedDetent: Binding<ModalDetent>, allowDetents: [ModalDetent]?) -> some View {
+    func debugToolbar(enable: Bool, selectedDetent: Binding<ModalDetent>, allowDetents: [ModalDetent]?) -> some View {
         modifier(
-            DebugToolbar(selectedDetent: selectedDetent, allowDetents: allowDetents)
+            DebugToolbar(enable: enable, selectedDetent: selectedDetent, allowDetents: allowDetents)
         )
     }
 }

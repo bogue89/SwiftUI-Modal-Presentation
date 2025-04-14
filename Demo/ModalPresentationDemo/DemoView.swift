@@ -2,8 +2,8 @@ import SwiftUI
 import ModalPresentation
 
 struct DemoView: View {
+    @State var demoExample: DemoExample = .weather
     @State var isPresented = false
-    @State var canGoFullscreen = false
     @State var selectedDetent: ModalDetent = .large
     @State var allowDetents: [ModalDetent]?
 
@@ -16,6 +16,19 @@ struct DemoView: View {
 
     var body: some View {
         List {
+            Section("Demo Exaple") {
+                Picker(
+                    selection: $demoExample,
+                    content: {
+                        ForEach(DemoExample.allCases, id: \.self) { option in
+                            Text("\(option)")
+                                .font(.footnote)
+                        }
+                    },
+                    label: EmptyView.init
+                )
+                .pickerStyle(SegmentedPickerStyle())
+            }
             Section("Modals") {
                 ForEach(Demo.allCases) { demo in
                     Button {
@@ -98,21 +111,18 @@ struct DemoView: View {
             modalDetent: $selectedDetent,
             detents: allowDetents
         ) {
-            if debugToolbar {
-                demoContent.debugToolbar(selectedDetent: $selectedDetent, allowDetents: allowDetents)
-            } else {
-                demoContent
-            }
+            DemoExampleView(example: demoExample)
+                .debugToolbar(
+                    enable: debugToolbar,
+                    selectedDetent: $selectedDetent,
+                    allowDetents: allowDetents
+                )
         }
         .modalPresentation(interactiveDismissDisabled: dismissInteractionDisabled)
         .modalPresentation(background: demoBackground.value)
         .modalPresentation(backdrop: demoBackdrop.value)
         .modalPresentation(cornerRadius: demoCornerRadius)
         .modalPresentation(transition: demoTransition.value)
-    }
-
-    private var demoContent: some View {
-        DemoWeatherView()
     }
 }
 
