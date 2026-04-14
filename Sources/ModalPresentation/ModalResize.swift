@@ -35,7 +35,6 @@ struct ModalResize: ViewModifier {
                 maxHeight = $0.size.height
             }
             .overlay(alignment: .bottom) {
-                // TODO: With debug toolbar and small detent top area is not draggable
                 VStack(spacing: 0) {
                     content
                         .safeAreaInset(edge: .top, spacing: 0) {
@@ -56,7 +55,7 @@ struct ModalResize: ViewModifier {
                         .ignoresSafeArea(edges: .bottom)
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: max(currentHeight, minHeight))
+                .frame(height: max(currentHeight, minHeight), alignment: .top)
                 .contentShape(Rectangle())
                 .gesture(dragGesture)
                 .onChange(of: isDragging) { _, value in

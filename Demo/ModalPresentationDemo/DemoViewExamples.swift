@@ -6,7 +6,7 @@ enum DemoExample: Identifiable, CaseIterable {
     case confirmation
     case image
 
-    var id: String { .init(describing: self) }
+    var id: String { String(describing: self) }
 }
 
 struct DemoExampleView: View {
@@ -34,6 +34,17 @@ struct DemoExampleView: View {
                                 Spacer()
                                 Text("\(Int.random(in: 10...36))°C")
                             }
+                        }
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("Exit")
+                                .fontWeight(.semibold)
+                                .padding()
+                                .background(
+                                    Capsule()
+                                        .fill(.ultraThinMaterial)
+                                )
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -92,6 +103,9 @@ struct DemoExampleView: View {
                     .resizable()
                     .aspectRatio(0.85, contentMode: .fit)
                     .frame(maxWidth: 200, maxHeight: .infinity)
+                    .onTapGesture {
+                        dismiss()
+                    }
             }
         }
     }

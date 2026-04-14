@@ -3,14 +3,14 @@ import SwiftUI
 enum DemoBackground: Identifiable, CaseIterable {
     case clear
     case material
-    case brown
+    case solid
 
     var id: String { .init(describing: self) }
     var value: AnyShapeStyle {
         switch self {
         case .clear: .init(Color.clear)
         case .material: .init(.regularMaterial)
-        case .brown: .init(Color.brown)
+        case .solid: .init(Color.white)
         }
     }
 }

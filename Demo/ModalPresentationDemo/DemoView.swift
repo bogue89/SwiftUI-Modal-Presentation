@@ -21,7 +21,7 @@ struct DemoView: View {
                     selection: $demoExample,
                     content: {
                         ForEach(DemoExample.allCases, id: \.self) { option in
-                            Text("\(option)")
+                            Text(String(describing: option))
                                 .font(.footnote)
                         }
                     },
@@ -54,7 +54,7 @@ struct DemoView: View {
                         selection: $demoBackground,
                         content: {
                             ForEach(DemoBackground.allCases, id: \.self) { option in
-                                Text("\(option)")
+                                Text(String(describing: option))
                                     .font(.footnote)
                             }
                         },
@@ -70,7 +70,7 @@ struct DemoView: View {
                         selection: $demoBackdrop,
                         content: {
                             ForEach(DemoBackdrop.allCases, id: \.self) { option in
-                                Text("\(option)")
+                                Text(String(describing: option))
                                     .font(.footnote)
                             }
                         },
@@ -86,7 +86,7 @@ struct DemoView: View {
                         selection: $demoTransition,
                         content: {
                             ForEach(DemoTransition.allCases, id: \.self) { option in
-                                Text("\(option)")
+                                Text(String(describing: option))
                                     .font(.footnote)
                             }
                         },

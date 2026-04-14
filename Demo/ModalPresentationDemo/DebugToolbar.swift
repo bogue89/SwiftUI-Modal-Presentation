@@ -17,7 +17,7 @@ struct DebugToolbar: ViewModifier {
             if enable {
                 VStack(spacing: 10) {
                     HStack {
-                        Text("\(selectedDetent)")
+                        Text(String(describing: selectedDetent))
                             .font(.footnote)
                         Spacer()
                         Button {
@@ -33,7 +33,7 @@ struct DebugToolbar: ViewModifier {
                             selection: $selectedDetent,
                             content: {
                                 ForEach(allowDetents, id: \.self) { detent in
-                                    Text("\(detent)")
+                                    Text(String(describing: detent))
                                 }
                             },
                             label: EmptyView.init

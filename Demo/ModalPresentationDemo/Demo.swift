@@ -15,7 +15,7 @@ enum Demo: Identifiable, CaseIterable {
         case .freeResize: "Free resize (no detents)"
         case .detents: "Detents (.small, .medium, .large, .fullscreen)"
         case .fractions: "Fractions (0.3, 0.5, 0.99)"
-        case .fixed: "fixed (100px, 300px, 600px)"
+        case .fixed: "fixed (150px, 300px, 600px)"
         }
     }
 
@@ -26,7 +26,7 @@ enum Demo: Identifiable, CaseIterable {
         case .freeResize: []
         case .detents: [.small, .medium, .large, .fullscreen]
         case .fractions: [.fraction(0.3), .fraction(0.5), .fraction(0.99)]
-        case .fixed: [.height(100), .height(300), .height(600)]
+        case .fixed: [.height(150), .height(300), .height(600)]
         }
     }
 }

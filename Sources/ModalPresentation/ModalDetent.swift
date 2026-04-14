@@ -11,7 +11,7 @@ public enum ModalDetent: Hashable {
     func resolve(for height: CGFloat) -> CGFloat {
         switch self {
         case .small: height * 0.25
-        case .medium: height * 0.4
+        case .medium: height * 0.6
         case .large: height * 0.9
         case .fullscreen: height
         case .fraction(let fraction): height * fraction
